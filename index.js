@@ -34,7 +34,7 @@ export function logImport (importData) {
     if (metaKey === 'deps') continue;
     var metaValue = metadata[metaKey];
     if (metaValue !== undefined) {
-      console.log(`${metaKey}: ${metaValue}`);
+      console.log(`${metaKey}:`,metaValue);
     }
   }
   console.group('  deps: ', importData.deps.length);
