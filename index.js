@@ -56,3 +56,18 @@ export function logImports () {
 export function getImports () {
   return imports;
 }
+export function loggedImport (path) {
+  // log imports on errors
+  var orgOnError = window.onerror;
+  window.onerror = logImports;
+  return System.import(path)
+    .then(function () {
+      logImports();
+      window.onerror = orgOnError;
+    })
+    .catch(function (err) {
+      //console.error(err);
+      logImports();
+      throw err;
+    });
+}

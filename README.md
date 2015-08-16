@@ -10,10 +10,27 @@ Usage
 ``` javascript
 // import debugger first
 System.import('systemjs-debugger').then(function(systemJSDebugger) {
-  System.import('app.js').then(function() {
-     // log imports after import
-    systemJSDebugger.logImports();
-  });
+  // log imports when import succeeds or fails
+  systemJSDebugger.loggedImport('app.js')
+});
+```
+Manually calling logImports()
+``` javascript
+// import debugger first
+System.import('systemjs-debugger').then(function(systemJSDebugger) {
+  System.import('app.js')
+    .then(function() {
+      // log imports after import
+      systemJSDebugger.logImports();
+      window.onerror = null;
+    })
+    .catch(function(err) {
+      console.error(err);
+      // log imports on errors
+      systemJSDebugger.logImports();
+    });
+    // log imports on errors
+    window.onerror = systemJSDebugger.logImports;
 });
 ```
 Example output
