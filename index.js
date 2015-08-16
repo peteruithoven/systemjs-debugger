@@ -12,18 +12,16 @@ System.normalize = function (path, importFrom) {
   });
   return promise;
 };
-var systemInstantiate = System.instantiate;
-System.instantiate = function (load) {
-  return systemInstantiate.apply(this, arguments)
-    .then(function (result) {
-      var importData = imports[load.name];
-      importData.metadata = load.metadata;
-      var fromData = imports[importData.from];
-      if (fromData) {
-        fromData.deps.push(importData);
-      }
-      return result;
-    });
+
+var systemLocate = System.locate;
+System.locate = function (load) {
+  var importData = imports[load.name];
+  importData.metadata = load.metadata;
+  var fromData = imports[importData.from];
+  if (fromData) {
+    fromData.deps.push(importData);
+  }
+  return systemLocate.apply(this, arguments);
 };
 
 export function logImport (importData) {
@@ -34,7 +32,7 @@ export function logImport (importData) {
     if (metaKey === 'deps') continue;
     var metaValue = metadata[metaKey];
     if (metaValue !== undefined) {
-      console.log(`${metaKey}:`,metaValue);
+      console.log(`${metaKey}:`, metaValue);
     }
   }
   console.group('  deps: ', importData.deps.length);
