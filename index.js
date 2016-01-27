@@ -61,9 +61,10 @@ export function loggedImport (path) {
   var orgOnError = window.onerror;
   window.onerror = logImports;
   return System.import(path)
-    .then(function () {
+    .then(function (module) {
       logImports();
       window.onerror = orgOnError;
+      return module;
     })
     .catch(function (err) {
       //console.error(err);
