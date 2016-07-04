@@ -3,26 +3,37 @@ var systemNormalize = System.normalize;
 System.normalize = function (path, importFrom) {
   var promise = systemNormalize.apply(this, arguments);
   promise.then(function (normalizedPath) {
-    imports[normalizedPath] = {
+    updateData(normalizedPath, {
       importPath: path,
       path: normalizedPath,
       from: importFrom,
       deps: []
-    };
+    });
   });
   return promise;
 };
 
 var systemLocate = System.locate;
 System.locate = function (load) {
-  var importData = imports[load.name];
-  importData.metadata = load.metadata;
+  var importData = updateData(load.name, {
+    metadata: load.metadata
+  })
   var fromData = imports[importData.from];
   if (fromData) {
     fromData.deps.push(importData);
   }
   return systemLocate.apply(this, arguments);
 };
+
+function updateData(normalizedPath, data) {
+  // create data if doesn't exist
+  var currData = imports[normalizedPath] = imports[normalizedPath] || {};
+  // extend data
+  for(var key in data) {
+    currData[key] = data[key];
+  }
+  return currData;
+}
 
 export function logImport (importData) {
   console.groupCollapsed(importData.importPath);
