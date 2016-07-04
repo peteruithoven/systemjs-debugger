@@ -46,11 +46,13 @@ export function logImport (importData) {
       console.log(`${metaKey}:`, metaValue);
     }
   }
-  console.group('  deps: ', importData.deps.length);
-  for (let depData of importData.deps) {
-    logImport(depData);
+  if (importData.deps) {
+    console.group('  deps: ', importData.deps.length);
+    for (let depData of importData.deps) {
+      logImport(depData);
+    }
+    console.groupEnd();
   }
-  console.groupEnd();
   console.groupEnd();
 }
 export function logImports () {
