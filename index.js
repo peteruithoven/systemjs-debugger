@@ -1,3 +1,5 @@
+var global = window || self;
+
 var imports = {};
 var systemNormalize = System.normalize;
 System.normalize = function (path, importFrom) {
@@ -71,12 +73,12 @@ export function getImports () {
 }
 export function loggedImport (path) {
   // log imports on errors
-  var orgOnError = window.onerror;
-  window.onerror = logImports;
+  var orgOnError = global.onerror;
+  global.onerror = logImports;
   return System.import(path)
     .then(function (module) {
       logImports();
-      window.onerror = orgOnError;
+      global.onerror = orgOnError;
       return module;
     })
     .catch(function (err) {
